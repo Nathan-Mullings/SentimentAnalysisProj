@@ -48,20 +48,22 @@ training_labels = np.array(training_labels).astype(np.int32)
 testing_padded = np.array(testing_padded)
 testing_labels = np.array(testing_labels).astype(np.int32)
 
+from tensorflow.keras.layers import Bidirectional, LSTM
+
 # Model definition
 model = tf.keras.Sequential([
     tf.keras.layers.Embedding(vocab_size, embedding_dim, input_length=max_length),
-    tf.keras.layers.GlobalAveragePooling1D(),
-    tf.keras.layers.Dropout(0.5),
-    tf.keras.layers.Dense(32, activation='relu'),
-    tf.keras.layers.Dense(3, activation='softmax')    # Output layer for three categories
-])
 
-model.compile(loss='sparse_categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+    tf.keras.layers.Dropout(0.5),
+    Bidirectional(LSTM(64)),
+    tf.keras.layers.Dense(64, activation='relu'),
+    tf.keras.layers.Dense(3, activation='softmax')  # Output layer for three categories
+])
+model.compile(loss='sparse_categorical_crossentropy', optimizer='Adam', metrics=['accuracy'])
 
 # Model training
 try:
-    model.fit(training_padded, training_labels, epochs=30, validation_data=(testing_padded, testing_labels), verbose=2)
+    model.fit(training_padded, training_labels, epochs=3, validation_data=(testing_padded, testing_labels), verbose=2)
 except Exception as e:
     print("An error occurred during model training:", str(e))
     raise
