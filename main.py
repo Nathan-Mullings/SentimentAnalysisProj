@@ -104,7 +104,7 @@ with st.expander('Analyse CSV'):
                 st.error('Uploaded CSV file does not contain a "text" column.')
             else:
                 df['sentiment'] = df['text'].apply(lambda x: print_predictions(model.predict(pad_sequences(tokenizer.texts_to_sequences([x]), maxlen=max_length, padding=padding_type, truncating=trunc_type))))
-                st.write(df)
+                st.write(df.head(10))
                 csv = df.to_csv(index=False).encode('utf-8')
                 st.download_button("Download data as CSV", data=csv, file_name='sentiment_analysis_results.csv', mime='text/csv')
         except Exception as e:
