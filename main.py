@@ -60,7 +60,12 @@ model = tf.keras.Sequential([
 model.compile(loss='sparse_categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
 # Model training
-model.fit(training_padded, training_labels, epochs=30, validation_data=(testing_padded, testing_labels), verbose=2)
+try:
+    model.fit(training_padded, training_labels, epochs=30, validation_data=(testing_padded, testing_labels), verbose=2)
+except Exception as e:
+    print("An error occurred during model training:", str(e))
+    raise
+
 
 # Function to convert predictions to labels
 def print_predictions(predictions):
